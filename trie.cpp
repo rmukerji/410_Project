@@ -43,6 +43,11 @@ class Node {
             return children[c - 97];
         }
 
+        vector<Node*> get_children()
+        {
+            return children;
+        }
+
         void insertChild(int index, Node * child) 
         { 
             children[index] = child; 
@@ -103,8 +108,30 @@ class Trie {
             return false;
         }
 
+        vector<string> all_words_that_start_with(char c)
+        {
+            Node * subroot = (root->get_children())[c - 97];
+            vector<string> words;
+            traverse_sub_tree(subroot, "", words);
+            return words;
+        }
+
     private:
         Node* root;
+        void traverse_sub_tree(Node * curr, string word, vector<string> & words)
+        {
+            if(curr == NULL)
+                return;
+
+            word += curr->content();
+            if(curr->wordMarker())
+                words.push_back(word);
+            for(int i = 0; i < 26; i++)
+            {
+                Node * ch = (curr->get_children())[i];
+                traverse_sub_tree(ch, word, words);
+            }
+        }
 };
 
 
@@ -154,13 +181,25 @@ int main()
         trie->addWord(s);
         num_words++;
     }
+
+    int best = 100000;
+    string best_string = "";
     while(1)
     {
         cout<<"Enter a word: ";
         cin >> s;
-        if(trie->searchWord(s))
-            cout<<s<<" was found!"<<endl;
-        else
-            cout<<s<<" was not found!"<<endl;
-    }
+        vector<string> words = trie->all_words_that_start_with(s[0]);
+        for(int i = 0; i < words.size(); i++)
+        { 
+            int dist = edit_distance(words[i], s);
+            if(dist < best)
+            {
+                best = dist;
+                best_string = words[i];
+            }
+        }
+        cout<<"Closest word: "<<best_string<<endl;  
+        best = 100000;
+        best_string = ""; 
+    } 
 }
