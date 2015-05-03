@@ -226,7 +226,7 @@ int main()
             // cin >> s;
             vector<string> words = sorted[s[0] - 97];
             if(trie->searchWord(s)) {
-                cout<<"In Dictionary: "<<s<<endl;
+                //cout<<"In Dictionary: "<<s<<endl;
                 correct++;
             }
             else
@@ -253,11 +253,11 @@ int main()
                 }
                 if(best_string.compare(sl) == 0)
                 {
-                    cout<<"Query: "<<s<<" Output: "<<best_string<<" Solution: "<<sl<<" Correct: YES"<<endl;
+                    //cout<<"Query: "<<s<<" Output: "<<best_string<<" Solution: "<<sl<<" Correct: YES"<<endl;
                     correct++;
                 }
                 else
-                    cout<<"Query: "<<s<<" Output: "<<best_string<<" Solution: "<<sl<<" Correct: NO"<<endl;
+                    cout<<"Query: "<<s<<" Output: "<<best_string<<" Solution: "<<sl<<" INCORRECTc"<<endl;
             }
         }
         cout<<float(correct)/total<<endl;
