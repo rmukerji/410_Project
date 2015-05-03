@@ -2,6 +2,8 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+#include <algorithm>
+#include <map>
 
 using namespace std;
 
@@ -879,55 +881,65 @@ int main()
     weights[25][24] =   4;// z to y 
     weights[25][25] =   0;// z to z 
 
-
-
-
+    std::map<string,int> dict;
     Trie* trie = new Trie();
-    
-    ifstream f("words.txt");
     string s;
+
+    ifstream f("words.txt");
     int num_words = 0;
     while(getline(f, s))
     {
         trie->addWord(s);
         num_words++;
+        dict[s] = 0;
     }
 
-    vector<vector<string> > sorted;
-    for(int i = 0; i < 26; i++)
+    //Time to read big.txt and fill in frequencies
+    ifstream big("cleaned_big.txt");
+    while(getline(big, s, ' '))
+        dict[s]++;
+
+    for(map<string, int>::iterator it = dict.begin(); iterator != dict.end(); iterator++) 
     {
-        vector<string> words = trie->all_words_that_start_with(char(i + 97));
-        sorted.push_back(words);
+        if(it->second == 0)
+            cout<<it->first<<endl;
     }
-    int best = 100000;
-    string best_string = "";
-    while(1)
-    {
-        cout<<"Enter a word: ";
-        cin >> s;
-        vector<string> words = sorted[s[0] - 97];
-        if(trie->searchWord(s))
-            cout<<s<<endl;
-        else
-        {
-            for(int i = 0; i < words.size(); i++)
-            { 
-                int dist = edit_distance(words[i], s, weights);
-                if(dist < best)
-                {
-                    best = dist;
-                    best_string = words[i];
-                }
-            }
+
+    // vector<vector<string> > sorted;
+    // for(int i = 0; i < 26; i++)
+    // {
+    //     vector<string> words = trie->all_words_that_start_with(char(i + 97));
+    //     sorted.push_back(words);
+    // }
+    // int best = 100000;
+    // string best_string = "";
+    // while(1)
+    // {
+    //     cout<<"Enter a word: ";
+    //     cin >> s;
+    //     vector<string> words = sorted[s[0] - 97];
+    //     if(trie->searchWord(s))
+    //         cout<<s<<endl;
+    //     else
+    //     {
+    //         for(int i = 0; i < words.size(); i++)
+    //         { 
+    //             int dist = edit_distance(words[i], s, weights);
+    //             if(dist < best)
+    //             {
+    //                 best = dist;
+    //                 best_string = words[i];
+    //             }
+    //         }
             
-            for(int i = 0; i < words.size(); i++)
-            { 
-                int dist = edit_distance(words[i], s, weights);
-                if(best == dist || dist == best + 1)
-                    cout<<words[i]<<endl;
-            }
-        }
-        best = 100000;
-        best_string = ""; 
-    } 
+    //         for(int i = 0; i < words.size(); i++)
+    //         { 
+    //             int dist = edit_distance(words[i], s, weights);
+    //             if(best == dist || dist == best + 1)
+    //                 cout<<words[i]<<endl;
+    //         }
+    //     }
+    //     best = 100000;
+    //     best_string = ""; 
+    // } 
 }
