@@ -2,6 +2,8 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+#include "weights.h" 
+
 using namespace std;
 
 class Node {
@@ -14,10 +16,7 @@ class Node {
                 children.push_back(NULL);
         }
 
-        ~Node()
-        {
-
-        }
+        ~Node(){ }
 
         char content() 
         { 
@@ -118,6 +117,7 @@ class Trie {
 
     private:
         Node* root;
+
         void traverse_sub_tree(Node * curr, string word, vector<string> & words)
         {
             if(curr == NULL)
