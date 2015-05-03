@@ -257,7 +257,7 @@ int main()
                     correct++;
                 }
                 else
-                    cout<<"Query: "<<s<<" Output: "<<best_string<<" Solution: "<<sl<<" INCORRECTc"<<endl;
+                    cout<<"Query: "<<s<<" Output: "<<best_string<<" Solution: "<<sl<<" INCORRECT"<<endl;
             }
         }
         cout<<float(correct)/total<<endl;
