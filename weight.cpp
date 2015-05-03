@@ -76,7 +76,7 @@ weight::weight()
   weights[2][15] =   5;// c to p
   weights[2][16] =   3;// c to q
   weights[2][17] =   2;// c to r
-  weights[2][18] =   2;// c to s
+  weights[2][18] =   1;// c to s
   weights[2][19] =   2;// c to t
   weights[2][20] =   4;// c to u
   weights[2][21] =   1;// c to v
@@ -224,7 +224,7 @@ weight::weight()
   weights[8][1] =   3;// i to b
   weights[8][2] =   4;// i to c
   weights[8][3] =   4;// i to d
-  weights[8][4] =   2;// i to e
+  weights[8][4] =   1;// i to e
   weights[8][5] =   3;// i to f
   weights[8][6] =   3;// i to g
   weights[8][7] =   2;// i to h
@@ -492,7 +492,7 @@ weight::weight()
 
   weights[18][0] =   1;// s to a
   weights[18][1] =   4;// s to b
-  weights[18][2] =   2;// s to c
+  weights[18][2] =   1;// s to c
   weights[18][3] =   1;// s to d
   weights[18][4] =   1;// s to e
   weights[18][5] =   2;// s to f
