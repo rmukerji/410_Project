@@ -2,6 +2,8 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+#include "weights.h" 
+
 using namespace std;
 
 class Node {
@@ -14,10 +16,7 @@ class Node {
                 children.push_back(NULL);
         }
 
-        ~Node()
-        {
-
-        }
+        ~Node(){ }
 
         char content() 
         { 
@@ -118,6 +117,7 @@ class Trie {
 
     private:
         Node* root;
+
         void traverse_sub_tree(Node * curr, string word, vector<string> & words)
         {
             if(curr == NULL)
@@ -159,9 +159,15 @@ int edit_distance(const string& A, const string& B, int (&weights)[26][26])
     for (int a = 1; a <= NA; ++a)
         for (int b = 1; b <= NB; ++b)
         {
+<<<<<<< HEAD
             int x = M[a-1][b] + 2;
             int y = M[a][b-1] + 2;
             int z = M[a-1][b-1] + (A[a-1] == B[b-1] ? 0 : weights[A[a - 1] - 97][B[b - 1] - 97]);
+=======
+            int x = M[a-1][b] + 1;
+            int y = M[a][b-1] + 1;
+            int z = M[a-1][b-1] + (A[a-1] == B[b-1] ? 0 : weights[a][b]);
+>>>>>>> 917765025882beba859c66a1e918e3cfc614a636
             M[a][b] = min(x,y,z);
         }
 
