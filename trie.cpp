@@ -160,7 +160,9 @@ int edit_distance(const string& A, const string& B, int (&weights)[26][26])
         {
             int x = M[a-1][b] + 2;
             int y = M[a][b-1] + 2;
-            int z = M[a-1][b-1] + (A[a-1] == B[b-1] ? 0 : weights[A[a - 1] - 97][B[b - 1] - 97]);
+            int z_1 = M[a-1][b-1] + (A[a-1] == B[b-1] ? 0 : weights[A[a - 1] - 97][B[b - 1] - 97]);
+            int z_2 = M[a-1][b-1] + (A[a-1] == B[b-1] ? 0 : 2);
+            int z = (z_1 + z_2)/2;
             M[a][b] = min(x,y,z);
         }
 
@@ -921,7 +923,7 @@ int main()
             for(int i = 0; i < words.size(); i++)
             { 
                 int dist = edit_distance(words[i], s, weights);
-                if(best == dist)
+                if(best == dist || dist == best + 1)
                     cout<<words[i]<<endl;
             }
         }
