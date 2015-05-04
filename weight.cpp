@@ -68,7 +68,7 @@ weight::weight()
   weights[2][7] =   2;// c to h
   weights[2][8] =   4;// c to i
   weights[2][9] =   3;// c to j
-  weights[2][10] =   4;// c to k
+  weights[2][10] =   1;// c to k
   weights[2][11] =   4;// c to l
   weights[2][12] =   4;// c to m
   weights[2][13] =   3;// c to n
@@ -276,7 +276,7 @@ weight::weight()
 
   weights[10][0] =   4;// k to a
   weights[10][1] =   2;// k to b
-  weights[10][2] =   2;// k to c
+  weights[10][2] =   1;// k to c
   weights[10][3] =   4;// k to d
   weights[10][4] =   4;// k to e
   weights[10][5] =   4;// k to f

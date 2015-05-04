@@ -35,6 +35,7 @@ class Node {
         {
             return end_word;
         }
+
         void setWordMarker()
         {
             end_word = true;
@@ -138,29 +139,30 @@ class Trie {
 };
 
 
-inline int min(int x, int y, int z)
+inline int min(int a, int b, int c)
 {
-    if (x < y)
-        return x < z ? x : z;
+    if (a < b)
+        return a < c ? a : c;
     else
-        return y < z ? y : z;
+        return b < c ? b : c;
 }
 
-int edit_distance(const string& A, const string& B, int (&weights)[26][26])
+int edit_distance(string & A, string & B, int (&weights)[26][26])
 {
-    int NA = A.size();
-    int NB = B.size();
+    int len_A = A.size();
+    int len_B = B.size();
 
-    vector<vector<int> > M(NA + 1, vector<int>(NB + 1));
+    int M[len_A + 1][len_B + 1];
 
-    for (int a = 0; a <= NA; ++a)
-        M[a][0] = a;
+    for (int i = 0; i <= len_A; i++)
+        M[i][0] = i;
 
-    for (int b = 0; b <= NB; ++b)
-        M[0][b] = b;
+    for (int j = 0; j <= len_B; j++)
+        M[0][j] = j;
 
-    for (int a = 1; a <= NA; ++a)
-        for (int b = 1; b <= NB; ++b)
+    for (int a = 1; a <= len_A; a++)
+    {
+        for (int b = 1; b <= len_B; b++)
         {
             int x = M[a-1][b] + 2;
             int y = M[a][b-1] + 2;
@@ -169,98 +171,85 @@ int edit_distance(const string& A, const string& B, int (&weights)[26][26])
             int z = (z_1 + z_2)/2;
             M[a][b] = min(x,y,z);
         }
+    }   
 
-    return M[A.size()][B.size()];
+    return M[len_A][len_B];
 }
 
 
 int main()
 {
-    std::map<string,int> dict;
+    map<string,int> dict;
     Trie* trie = new Trie();
+    weight* w = new weight();
     string s;
-
-    weight* weights = new weight();
-
+    string sl;
     ifstream f("words.txt");
-    int num_words = 0;
+    ifstream big("cleaned_big.txt");
+    vector<vector<string> > sorted;
+
+    //loop to populate trie with all words in the english dictionary
     while(getline(f, s))
     {
         trie->addWord(s);
-        num_words++;
         dict[s] = 0;
     }
 
-    //Time to read big.txt and fill in frequencies
-    ifstream big("cleaned_big.txt");
+    //loop to give appropriate frequencies to the words
     while(getline(big, s, ' '))
         dict[s]++;
 
+    //loop to smooth words with 0 frequencies by assigning them a frequency of 1
     for(map<string, int>::iterator it = dict.begin(); it != dict.end(); it++)
     {
         if(it->second == 0)
             it->second = 1;
     }
 
-    vector<vector<string> > sorted;
+    //loop to store in vector all words in the english dictionary with a particular letter
     for(int i = 0; i < 26; i++)
     {
         vector<string> words = trie->all_words_that_start_with(char(i + 97));
         sorted.push_back(words);
     }
-    ifstream test("test.txt");
-    ifstream sol("solution.txt");
-    string sl;
+
+    cout<<"\n";
     while(1)
     {
-        int correct = 0;
-        int total = 0;
-        while(getline(test, s, '\n'))
+        int threshold = 0;
+        int best = 100000;
+        string best_string = "";
+        cout<<"Enter a word: ";
+        cin >> s;
+        vector<string> words = sorted[s[0] - 97];
+        if(trie->searchWord(s)) //if the word exists in the english language
+            cout<<"Closest Word: "<<s<<endl;
+        else
         {
-            getline(sol, sl, '\n');
-            int best = 100000;
-            string best_string = "";
-            int freq = 0;
-            total++;
-            // cout<<"Enter a word: ";
-            // cin >> s;
-            vector<string> words = sorted[s[0] - 97];
-            if(trie->searchWord(s)) {
-                //cout<<"In Dictionary: "<<s<<endl;
-                correct++;
-            }
-            else
+            for(int i = 0; i < words.size(); i++)
             {
-                for(int i = 0; i < words.size(); i++)
+                int dist = edit_distance(words[i], s, w->weights);
+                if(dist < best)
+                    best = dist;
+            }
+            for(int i = 0; i < words.size(); i++)
+            {
+                int dist = edit_distance(words[i], s, w->weights);
+                if(best == dist || best == dist + 1)
                 {
-                    int dist = edit_distance(words[i], s, weights->weights);
-                    if(dist < best)
-                        best = dist;
-                }
-
-                for(int i = 0; i < words.size(); i++)
-                {
-                    int dist = edit_distance(words[i], s, weights->weights);
-                    if(best == dist)
+                    //cout<<words[i]<<"\t"<<dist<<" "<<dict[words[i]]<<endl;
+                    if(dict[words[i]] * dist >= threshold)
                     {
-                        //cout<<words[i]<<"\t"<<dict[words[i]]<<endl;
-                        if(dict[words[i]] > freq)
-                        {
-                            freq = dict[words[i]];
+                        if(dict[words[i]] * dist == threshold)
+                            best_string += " " + words[i];
+                        else
                             best_string = words[i];
-                        }
+                        threshold = dict[words[i]] * dist;
                     }
                 }
-                if(best_string.compare(sl) == 0)
-                {
-                    //cout<<"Query: "<<s<<" Output: "<<best_string<<" Solution: "<<sl<<" Correct: YES"<<endl;
-                    correct++;
-                }
-                else
-                    cout<<"Query: "<<s<<" Output: "<<best_string<<" Solution: "<<sl<<" INCORRECT"<<endl;
             }
+            cout<<"Closest Word(s): "<<best_string<<endl;
         }
-        cout<<float(correct)/total<<endl;
-        break;
+        cout<<"\n";
     }
 }
